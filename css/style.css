@@ -1,0 +1,118 @@
+/* ======== Général ======== */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f9f9f9;
+}
+.logo {
+    width: 60px;      /* taille souhaitée */
+    height: 45px;     /* pour garder un ratio 4:3 */
+    border-radius: 15%; /* coins légèrement arrondis */
+    object-fit: cover;  /* pour que l'image remplisse bien son cadre */
+}
+
+/* Header */
+header {
+    background-color: #ffffff;
+    padding: 2rem 0;
+    text-align: center;
+}
+
+header img {
+    width: 240px; /* agrandit l'image */
+    height: 180px; /* pour garder un ratio 4:3 (largeur:hauteur = 120:90) */
+    border-radius: 25%; /* rend les coins arrondis, pas complètement circulaire */
+    object-fit: cover; /* garde l'image centrée et évite la déformation */
+}
+
+
+header h1 {
+    font-size: 2rem;
+    margin-top: 1rem;
+}
+
+header p {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+/* Sections */
+section {
+    padding: 2rem 0;
+}
+
+/* Titres de section */
+h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+    border-bottom: 2px solid #007bff;
+    display: inline-block;
+    padding-bottom: 0.3rem;
+}
+
+/* Progress bars */
+.progress {
+    height: 20px;
+    margin-bottom: 1rem;
+}
+
+/* Projet */
+.card.border-dashed {
+    border: 2px dashed #ccc !important;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    padding: 2rem;
+}
+
+/* Footer */
+footer {
+    margin-top: 3rem;
+    padding: 1.5rem 0;
+    background-color: #e9ecef;
+    text-align: center;
+    color: #555;
+}
+
+/* Formulaire */
+#contactForm .form-label {
+    font-weight: 500;
+}
+
+#contactForm .btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+#formMessage {
+    font-size: 0.95rem;
+}
+/* Timeline verticale */
+.timeline {
+  position: relative;
+  margin: 2rem 0;
+  padding-left: 20px;
+  border-left: 3px solid #007bff;
+}
+
+.timeline-item {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.timeline-item h5 {
+  margin-left: 10px;
+  margin-bottom: 0.5rem;
+  color: #007bff;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 5px;
+  width: 15px;
+  height: 15px;
+  background-color: #007bff;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
