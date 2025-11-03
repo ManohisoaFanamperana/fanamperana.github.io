@@ -18,14 +18,13 @@ const algoFrenchNames = {
   "SmoothSort": "Tri smoothsort",
   "Stooge Sort": "Tri stooges",
   "Pancake Sort": "Tri crêpes",
-  "Bitonic Sort": "Tri bitonique"
 };
 
 const algorithms = [
   "Bubble Sort", "Selection Sort", "Insertion Sort", "Gnome Sort", "Cocktail Sort",
   "Comb Sort", "Shell Sort", "Quick Sort", "Merge Sort", "Heap Sort",
   "Counting Sort", "Bucket Sort", "Radix Sort",
-  "Stooge Sort", "Pancake Sort", "Bitonic Sort"
+  "Stooge Sort", "Pancake Sort"
 ];
 
 let array = [];
@@ -107,18 +106,17 @@ function drawArray(ctx, arr, color = "#0d6efd") {
 
 /* === ANIMATEUR GÉNÉRIQUE === */
 async function visualizeAlgorithm(algo, sortFunc) {
-  const v = visualizers[algo];
-  const arr = [...array];
-  const start = performance.now();
+    const v = visualizers[algo];
+    const arr = [...array];
+    const start = performance.now();
 
-  v.playing = true;
-  await sortFunc(arr, v);
-  const end = performance.now();
+    v.playing = true;
+    await sortFunc(arr, v);
+    const end = performance.now();
+    v.duration = formatTime(end - start);
+    document.getElementById(`time-${algo}`).textContent = v.duration;
 
-  v.duration = (end - start).toFixed(2);
-  document.getElementById(`time-${algo}`).textContent = v.duration;
-  v.playing = false;
-  drawArray(v.ctx, arr, "#198754");
+    drawArray(v.ctx, arr, "#198754");
 }
 
 /* === PAUSE / REPRISE === */
@@ -399,12 +397,6 @@ async function pancakeSort(arr, v) {
 }
 
 /* === BITONIC SORT === */
-async function bitonicSort(arr, v) {
-  arr.sort((a, b) => a - b);
-  drawArray(v.ctx, arr, "#0dcaf0");
-  await sleep(v.speed, v);
-}
-
 async function partition(arr, v, low, high) {
   let pivot = arr[high];
   let i = low - 1;
@@ -484,6 +476,17 @@ function startAlgorithm(algo) {
       console.warn(`Algorithme ${algo} non reconnu !`);
       break;
   }
+}
+function formatTime(ms) {
+  const minutes = Math.floor(ms / 60000);
+  const seconds = Math.floor((ms % 60000) / 1000);
+  const milliseconds = Math.floor(ms % 1000);
+  
+  const mm = String(minutes).padStart(2, '0');
+  const ss = String(seconds).padStart(2, '0');
+  const mmm = String(milliseconds).padStart(3, '0');
+  
+  return `${mm}:${ss}.${mmm}`;
 }
 
 
