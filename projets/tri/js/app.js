@@ -64,16 +64,25 @@ function createCanvases() {
     buttonsDiv.className = "control-buttons mt-2";
 
     const playBtn = document.createElement("button");
+    playBtn.type = "button";
     playBtn.textContent = "▶️ Lancer";
     playBtn.className = "play";
+    playBtn.setAttribute("aria-label", `Lancer ${algo}`);
+    playBtn.title = `Lancer ${algo}`;
 
     const pauseBtn = document.createElement("button");
+    pauseBtn.type = "button";
     pauseBtn.textContent = "⏸️ Pause";
     pauseBtn.className = "pause";
+    pauseBtn.setAttribute("aria-label", `Mettre en pause ${algo}`);
+    pauseBtn.title = `Mettre en pause ${algo}`;
 
     const resumeBtn = document.createElement("button");
+    resumeBtn.type = "button";
     resumeBtn.textContent = "🔁 Reprendre";
     resumeBtn.className = "resume";
+    resumeBtn.setAttribute("aria-label", `Reprendre ${algo}`);
+    resumeBtn.title = `Reprendre ${algo}`;
 
     buttonsDiv.append(playBtn, pauseBtn, resumeBtn);
     col.append(title, canvas, buttonsDiv);
@@ -84,7 +93,7 @@ function createCanvases() {
     row.innerHTML = `<td>${algo}</td><td id="time-${algo}">-</td><td>Contrôle au-dessus</td>`;
     tableBody.appendChild(row);
 
-    visualizers[algo] = { canvas, ctx, playing: false, paused: false, speed, duration: 0 };
+    visualizers[algo] = { canvas, ctx, playing: false, paused: false, speed, duration: 0, controls: { playBtn, pauseBtn, resumeBtn } };
 
     playBtn.addEventListener("click", () => startAlgorithm(algo));
     pauseBtn.addEventListener("click", () => pauseAlgorithm(algo));
@@ -111,12 +120,17 @@ async function visualizeAlgorithm(algo, sortFunc) {
     const start = performance.now();
 
     v.playing = true;
-    await sortFunc(arr, v);
-    const end = performance.now();
-    v.duration = formatTime(end - start);
-    document.getElementById(`time-${algo}`).textContent = v.duration;
-
-    drawArray(v.ctx, arr, "#198754");
+    if (v.controls && v.controls.playBtn) v.controls.playBtn.disabled = true;
+    try {
+      await sortFunc(arr, v);
+    } finally {
+      const end = performance.now();
+      v.duration = formatTime(end - start);
+      document.getElementById(`time-${algo}`).textContent = v.duration;
+      drawArray(v.ctx, arr, "#198754");
+      v.playing = false;
+      if (v.controls && v.controls.playBtn) v.controls.playBtn.disabled = false;
+    }
 }
 
 /* === PAUSE / REPRISE === */
@@ -126,8 +140,7 @@ function pauseAlgorithm(algo) {
 function resumeAlgorithm(algo) {
   if (visualizers[algo]) visualizers[algo].paused = false;
 }
-async function sleep(ms, algo) {
-  const v = visualizers[algo];
+async function sleep(ms, v) {
   while (v && v.paused) await new Promise(r => setTimeout(r, 50));
   return new Promise(r => setTimeout(r, ms));
 }
@@ -413,10 +426,7 @@ async function partition(arr, v, low, high) {
 }
 
 /* === PLACEHOLDERS POUR AUTRES ALGORITHMES === */
-async function simpleSort(arr, v) {
-  arr.sort((a, b) => a - b);
-  drawArray(v.ctx, arr, "#198754");
-}
+// simpleSort déjà défini plus haut, duplication supprimée
 
 /* === LANCEMENT === */
 /* === LANCEMENT DE CHAQUE ALGORITHME === */
@@ -469,9 +479,7 @@ function startAlgorithm(algo) {
     case "Pancake Sort":
       visualizeAlgorithm(algo, pancakeSort);
       break;
-    case "Bitonic Sort":
-      visualizeAlgorithm(algo, bitonicSort);
-      break;
+    // Bitonic Sort non implémenté: entrée supprimée
     default:
       console.warn(`Algorithme ${algo} non reconnu !`);
       break;
